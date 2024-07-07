@@ -1,1 +1,54 @@
-<p>user works!</p>
+<div class="container px-4 py-8 mx-auto">
+  <h2 class="mb-4 text-2xl font-bold">List of Users</h2>
+  <button
+    title="Create User"
+    (click)="handleAction('create')"
+    class="flex items-center justify-center px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded"
+  >
+    <ng-icon name="heroEye" class="w-8 h-8 stroke-2"></ng-icon>
+  </button>
+
+  <div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200">
+      <thead>
+        <tr>
+          <th
+            *ngFor="let header of headers"
+            class="px-6 py-3 text-xs leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
+          >
+            {{ header }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users?.data" class="hover:bg-gray-100">
+          <td class="px-6 py-4 border-b border-gray-200">{{ user.nombres }}</td>
+          <td class="px-6 py-4 border-b border-gray-200">
+            {{ user.apellidos }}
+          </td>
+          <td class="px-6 py-4 border-b border-gray-200">
+            {{ user.edad || "N/A" }}
+          </td>
+          <td class="px-6 py-4 border-b border-gray-200">{{ user.correo }}</td>
+          <td class="px-6 py-4 border-b border-gray-200">{{ user.celular }}</td>
+          <td class="px-6 py-4 border-b border-gray-200">
+            {{ user.estado_habilitado ? "Sí" : "No" }}
+          </td>
+          <td class="px-6 py-4 border-b border-gray-200">
+            <div class="flex gap-2">
+              <button
+                title="Edit"
+                *ngFor="let action of actions"
+                (click)="handleAction(action.method, user.cliente_id.toString())"
+                class="flex items-center justify-center px-2 py-1 font-bold text-white rounded"
+                [ngClass]="action.color"
+              >
+                <ng-icon [name]="action.icon" class="w-8 h-8 stroke-2"></ng-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
