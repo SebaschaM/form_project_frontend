@@ -1,30 +1,31 @@
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgIconComponent, NgIconsModule, provideIcons } from '@ng-icons/core';
-import {
-  heroEye,
-  heroPencil,
-  heroAdjustmentsVertical,
-  heroTrash,
-} from '@ng-icons/heroicons/outline';
-import {
-  CreateUserDto,
-  ResponseUsersDto,
-  ResponseWrapperDto,
-  UpdateUserDto,
-} from './interfaces/user';
+import { NgIconComponent, provideIcons } from '@ng-icons/core';
+import { ResponseUsersDto, ResponseWrapperDto } from './interfaces/user';
 import { UserService } from '../services/user.service';
-
-type ActionMethod = 'view' | 'update' | 'toggleState' | 'delete' | 'create';
+import {
+  heroAdjustmentsVerticalMini,
+  heroCheckBadgeMini,
+  heroEyeMini,
+  heroPencilMini,
+  heroTrashMini,
+} from '@ng-icons/heroicons/mini';
+import { ModalAddComponent } from '../components/modal-add/modal-add.component';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [CommonModule, NgIconComponent],
+  imports: [CommonModule, NgIconComponent, ModalAddComponent],
   templateUrl: './user.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   viewProviders: [
-    provideIcons({ heroEye, heroPencil, heroAdjustmentsVertical, heroTrash }),
+    provideIcons({
+      heroEyeMini,
+      heroPencilMini,
+      heroCheckBadgeMini,
+      heroAdjustmentsVerticalMini,
+      heroTrashMini,
+    }),
   ],
 })
 export class UserComponent implements OnInit {
@@ -34,7 +35,6 @@ export class UserComponent implements OnInit {
   headers: string[] = [
     'Nombres',
     'Apellidos',
-    'Edad',
     'Correo',
     'Celular',
     'Estado Habilitado',
@@ -44,25 +44,25 @@ export class UserComponent implements OnInit {
   actions = [
     {
       name: 'Ver detalle',
-      icon: 'heroEye',
+      icon: 'heroEyeMini',
       color: 'bg-green-500',
       method: 'view',
     },
     {
       name: 'Actualizar cliente',
-      icon: 'heroPencil',
+      icon: 'heroPencilMini',
       color: 'bg-yellow-500',
       method: 'update',
     },
     {
       name: 'Cambiar estado',
-      icon: 'heroAdjustmentsVertical',
+      icon: 'heroAdjustmentsVerticalMini',
       color: 'bg-purple-500',
       method: 'toggleState',
     },
     {
       name: 'Eliminar cliente',
-      icon: 'heroTrash',
+      icon: 'heroTrashMini',
       color: 'bg-red-500',
       method: 'delete',
     },
@@ -82,6 +82,13 @@ export class UserComponent implements OnInit {
   }
 
   handleAction(action: string, id?: string): void {
-    console.log(`Abriendo modal para ${action}${id ? ` con ID ${id}` : ''}`);
+    if (action === 'create') {
+      const modal = document.getElementById('modal-add');
+      if (modal) {
+        modal.style.display = 'flex';
+      }
+    } else {
+      console.log(`Abriendo modal para ${action}${id ? ` con ID ${id}` : ''}`);
+    }
   }
 }

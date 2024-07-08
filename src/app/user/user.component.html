@@ -5,50 +5,92 @@
     (click)="handleAction('create')"
     class="flex items-center justify-center px-4 py-2 mb-4 font-bold text-white bg-blue-500 rounded"
   >
-    <ng-icon name="heroEye" class="w-8 h-8 stroke-2"></ng-icon>
+    <ng-icon name="heroCheckBadgeMini" class="w-8 h-8 mr-2 stroke-4"></ng-icon>
+    Crear Usuario
   </button>
 
   <div class="overflow-x-auto">
-    <table class="min-w-full bg-white border border-gray-200">
-      <thead>
+    <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+      <thead class="bg-gray-200">
         <tr>
           <th
             *ngFor="let header of headers"
-            class="px-6 py-3 text-xs leading-4 tracking-wider text-left text-gray-600 uppercase bg-gray-100 border-b-2 border-gray-200"
+            class="px-6 py-3 text-sm font-semibold text-left text-gray-700 uppercase border-b border-gray-300"
           >
             {{ header }}
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let user of users?.data" class="hover:bg-gray-100">
-          <td class="px-6 py-4 border-b border-gray-200">{{ user.nombres }}</td>
-          <td class="px-6 py-4 border-b border-gray-200">
+        <tr
+          *ngFor="let user of users?.data; let i = index"
+          [ngClass]="{ 'bg-gray-50': i % 2 === 0, 'bg-white': i % 2 !== 0 }"
+        >
+          <td class="px-6 py-4 border-b border-gray-300">{{ user.nombres }}</td>
+          <td class="px-6 py-4 border-b border-gray-300">
             {{ user.apellidos }}
           </td>
-          <td class="px-6 py-4 border-b border-gray-200">
-            {{ user.edad || "N/A" }}
-          </td>
-          <td class="px-6 py-4 border-b border-gray-200">{{ user.correo }}</td>
-          <td class="px-6 py-4 border-b border-gray-200">{{ user.celular }}</td>
-          <td class="px-6 py-4 border-b border-gray-200">
+          <td class="px-6 py-4 border-b border-gray-300">{{ user.correo }}</td>
+          <td class="px-6 py-4 border-b border-gray-300">{{ user.celular }}</td>
+          <td class="px-6 py-4 border-b border-gray-300">
             {{ user.estado_habilitado ? "Sí" : "No" }}
           </td>
-          <td class="px-6 py-4 border-b border-gray-200">
+          <td class="px-6 py-4 border-b border-gray-300">
             <div class="flex gap-2">
               <button
-                title="Edit"
-                *ngFor="let action of actions"
-                (click)="handleAction(action.method, user.cliente_id.toString())"
-                class="flex items-center justify-center px-2 py-1 font-bold text-white rounded"
-                [ngClass]="action.color"
+                title="Ver detalle"
+                (click)="handleAction('view', user.cliente_id.toString())"
+                class="flex items-center justify-center px-3 py-1 font-bold text-white bg-green-500 rounded hover:bg-green-600"
               >
-                <ng-icon [name]="action.icon" class="w-8 h-8 stroke-2"></ng-icon>
+                <ng-icon
+                  name="heroEyeMini"
+                  class="w-5 h-5 mr-1 stroke-2"
+                ></ng-icon>
+                Ver
+              </button>
+              <button
+                title="Actualizar cliente"
+                (click)="handleAction('update', user.cliente_id.toString())"
+                class="flex items-center justify-center px-3 py-1 font-bold text-white bg-yellow-500 rounded hover:bg-yellow-600"
+              >
+                <ng-icon
+                  name="heroPencilMini"
+                  class="w-5 h-5 mr-1 stroke-2"
+                ></ng-icon>
+                Editar
+              </button>
+              <button
+                title="Cambiar estado"
+                (click)="
+                  handleAction('toggleState', user.cliente_id.toString())
+                "
+                class="flex items-center justify-center px-3 py-1 font-bold text-white bg-purple-500 rounded hover:bg-purple-600"
+              >
+                <ng-icon
+                  name="heroAdjustmentsVerticalMini"
+                  class="w-5 h-5 mr-1 stroke-2"
+                ></ng-icon>
+                Estado
+              </button>
+              <button
+                title="Eliminar cliente"
+                (click)="handleAction('delete', user.cliente_id.toString())"
+                class="flex items-center justify-center px-3 py-1 font-bold text-white bg-red-500 rounded hover:bg-red-600"
+              >
+                <ng-icon
+                  name="heroTrashMini"
+                  class="w-5 h-5 mr-1 stroke-2"
+                ></ng-icon>
+                Eliminar
               </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+  </div>
+  <!-- Modal -->
+  <div id="modal-add" style="display:none;">
+    <app-modal-add></app-modal-add>
   </div>
 </div>

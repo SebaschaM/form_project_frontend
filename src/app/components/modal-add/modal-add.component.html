@@ -1,0 +1,193 @@
+<div
+  class="fixed inset-0 z-50 flex items-center justify-center overflow-auto bg-black bg-opacity-50"
+  (click)="closeModal()"
+>
+  <div
+    class="relative w-full max-w-lg p-6 mx-auto bg-white rounded-lg shadow-lg"
+    (click)="$event.stopPropagation()"
+  >
+    <button
+      class="absolute top-0 right-0 mt-4 mr-4 text-gray-600 hover:text-gray-900"
+      (click)="closeModal()"
+    >
+      &times;
+    </button>
+    <h2 class="mb-4 text-2xl font-bold">Agregar Cliente</h2>
+    <form (ngSubmit)="onSubmit(clientForm)" #clientForm="ngForm">
+      <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold text-gray-700" for="nombres"
+          >Nombres</label
+        >
+        <input
+          type="text"
+          id="nombres"
+          name="nombres"
+          [(ngModel)]="client.nombres"
+          class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:shadow-outline"
+          required
+          minlength="4"
+          maxlength="50"
+          #nombres="ngModel"
+        />
+        <div
+          *ngIf="nombres.invalid && nombres.touched"
+          class="text-sm text-red-500"
+        >
+          <div *ngIf="nombres.errors?.['required']">
+            El campo es obligatorio.
+          </div>
+          <div *ngIf="nombres.errors?.['minlength']">
+            El nombre debe tener al menos 4 caracteres.
+          </div>
+          <div *ngIf="nombres.errors?.['maxlength']">
+            El nombre no puede exceder los 50 caracteres.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label
+          class="block mb-2 text-sm font-bold text-gray-700"
+          for="apellidos"
+          >Apellidos</label
+        >
+        <input
+          type="text"
+          id="apellidos"
+          name="apellidos"
+          [(ngModel)]="client.apellidos"
+          class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:shadow-outline"
+          required
+          minlength="4"
+          maxlength="50"
+          #apellidos="ngModel"
+        />
+        <div
+          *ngIf="apellidos.invalid && apellidos.touched"
+          class="text-sm text-red-500"
+        >
+          <div *ngIf="apellidos.errors?.['required']">
+            El campo es obligatorio.
+          </div>
+          <div *ngIf="apellidos.errors?.['minlength']">
+            El apellido debe tener al menos 4 caracteres.
+          </div>
+          <div *ngIf="apellidos.errors?.['maxlength']">
+            El apellido no puede exceder los 50 caracteres.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold text-gray-700" for="correo"
+          >Correo</label
+        >
+        <input
+          type="email"
+          id="correo"
+          name="correo"
+          [(ngModel)]="client.correo"
+          class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:shadow-outline"
+          required
+          maxlength="100"
+          #correo="ngModel"
+        />
+        <div
+          *ngIf="correo.invalid && correo.touched"
+          class="text-sm text-red-500"
+        >
+          <div *ngIf="correo.errors?.['required']">
+            El campo es obligatorio.
+          </div>
+          <div *ngIf="correo.errors?.['email']">Ingrese un correo válido.</div>
+          <div *ngIf="correo.errors?.['maxlength']">
+            El correo no puede exceder los 100 caracteres.
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold text-gray-700" for="celular"
+          >Celular</label
+        >
+        <input
+          type="text"
+          id="celular"
+          name="celular"
+          [(ngModel)]="client.celular"
+          class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:shadow-outline"
+          required
+          pattern="^[0-9]{9,11}$"
+          #celular="ngModel"
+        />
+        <div
+          *ngIf="celular.invalid && celular.touched"
+          class="text-sm text-red-500"
+        >
+          <div *ngIf="celular.errors?.['required']">
+            El campo es obligatorio.
+          </div>
+          <div *ngIf="celular.errors?.['pattern']">
+            Ingrese un número de celular válido (9-11 dígitos).
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label
+          class="block mb-2 text-sm font-bold text-gray-700"
+          for="fecha_nacimiento"
+          >Fecha de Nacimiento</label
+        >
+        <input
+          type="date"
+          id="fecha_nacimiento"
+          name="fecha_nacimiento"
+          [(ngModel)]="client.fecha_nacimiento"
+          class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:shadow-outline"
+          required
+          #fecha_nacimiento="ngModel"
+        />
+        <div
+          *ngIf="fecha_nacimiento.invalid && fecha_nacimiento.touched"
+          class="text-sm text-red-500"
+        >
+          <div *ngIf="fecha_nacimiento.errors?.['required']">
+            El campo es obligatorio.
+          </div>
+          <div
+            *ngIf="
+              client.fecha_nacimiento &&
+              calculateAge(client.fecha_nacimiento) < 18
+            "
+          >
+            El cliente debe ser mayor de 18 años.
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button
+          type="button"
+          class="px-4 py-2 mr-2 font-bold text-white bg-gray-500 rounded hover:bg-gray-700"
+          (click)="closeModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700"
+        >
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Plantillas de toast -->
+<ng-template #successTpl>Usuario creado exitosamente</ng-template>
+<ng-template #errorTpl>Error al crear usuario</ng-template>
+
+<!-- Contenedor de toasts -->
+<app-toasts aria-live="polite" aria-atomic="true"></app-toasts>
