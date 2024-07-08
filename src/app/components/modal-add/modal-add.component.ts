@@ -3,14 +3,12 @@ import { Component, ViewChild, TemplateRef } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { CreateUserDto } from '../../user/interfaces/user';
-import { ToastService } from '../toast/toas-service';
-import { ToastsContainer } from '../toast/toasts-container.component';
 
 @Component({
   selector: 'app-modal-add',
   standalone: true,
   templateUrl: './modal-add.component.html',
-  imports: [FormsModule, CommonModule, ToastsContainer],
+  imports: [FormsModule, CommonModule],
 })
 export class ModalAddComponent {
   @ViewChild('clientForm') clientForm!: NgForm;
@@ -24,20 +22,15 @@ export class ModalAddComponent {
     estado_habilitado: false,
   };
 
-  constructor(
-    private userService: UserService,
-    private toastService: ToastService
-  ) {} // Añade ToastService al constructor
+  constructor(private userService: UserService) {}
 
   createUser(createUserDto: CreateUserDto): void {
     this.userService.createUser(createUserDto).subscribe({
       next: (response) => {
         console.log('Usuario creado:', response);
-        this.showSuccess(); // Muestra un toast de éxito
       },
       error: (error) => {
         console.error('Error al crear usuario:', error);
-        this.showError(); // Muestra un toast de error
       },
     });
   }
@@ -99,26 +92,6 @@ export class ModalAddComponent {
     const [year, month, day] = dateString.split('-');
     return `${day}/${month}/${year}`;
   }
-
-  // Métodos para mostrar toasts
-  showSuccess() {
-    const template = this.successTpl;
-    this.toastService.show({
-      template,
-      classname: 'bg-success text-light',
-      delay: 5000,
-    });
-  }
-
-  showError() {
-    const template = this.errorTpl;
-    this.toastService.show({
-      template,
-      classname: 'bg-danger text-light',
-      delay: 5000,
-    });
-  }
-
   // Referencias de plantilla para los toasts
   successTpl!: TemplateRef<any>;
   errorTpl!: TemplateRef<any>;
