@@ -1,58 +1,66 @@
-import { CommonModule } from '@angular/common';
-import { Component, ViewChild, TemplateRef } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
-import { UserService } from '../../services/user.service';
-import { CreateUserDto } from '../../user/interfaces/user';
+import { CommonModule } from "@angular/common";
+import { Component, ViewChild, TemplateRef } from "@angular/core";
+import { FormsModule, NgForm } from "@angular/forms";
+import { UserService } from "../../services/user.service";
+import { CreateUserDto, ResponseUsersDto } from "../../user/interfaces/user";
+import { ToastrService } from "ngx-toastr";
+import { formatDate } from "../../utils/formatDate";
 
 @Component({
-  selector: 'app-modal-add',
+  selector: "app-modal-add",
   standalone: true,
-  templateUrl: './modal-add.component.html',
+  templateUrl: "./modal-add.component.html",
   imports: [FormsModule, CommonModule],
 })
 export class ModalAddComponent {
-  @ViewChild('clientForm') clientForm!: NgForm;
+  @ViewChild("clientForm") clientForm!: NgForm;
+  users: ResponseUsersDto | null = null;
 
   client = {
-    nombres: '',
-    apellidos: '',
-    correo: '',
-    celular: '',
-    fecha_nacimiento: '',
+    nombres: "",
+    apellidos: "",
+    correo: "",
+    celular: "",
+    fecha_nacimiento: "",
     estado_habilitado: false,
   };
 
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private toastr: ToastrService
+  ) {}
 
   createUser(createUserDto: CreateUserDto): void {
     this.userService.createUser(createUserDto).subscribe({
       next: (response) => {
-        console.log('Usuario creado:', response);
+        console.log("Usuario creado:", response);
+        this.toastr.success("Usuario creado exitosamente");
       },
       error: (error) => {
-        console.error('Error al crear usuario:', error);
+        console.error("Error al crear usuario:", error);
+        this.toastr.error(error.error.message);
       },
     });
   }
 
   closeModal() {
     this.resetForm();
-    const modal = document.getElementById('modal-add');
+    const modal = document.getElementById("modal-add");
     if (modal) {
-      modal.style.display = 'none';
+      modal.style.display = "none";
     }
   }
 
   onSubmit(form: NgForm) {
     if (form.valid) {
-      const formattedDate = this.formatDate(this.client.fecha_nacimiento);
+      const formattedDate = formatDate(this.client.fecha_nacimiento);
       this.client.fecha_nacimiento = formattedDate;
-      console.log('Cliente agregado:', this.client);
+      console.log("Cliente agregado:", this.client);
       this.createUser(this.client);
       this.closeModal();
     } else {
       form.control.markAllAsTouched();
-      console.log('Formulario inválido');
+      this.toastr.error("Por favor, complete todos los campos");
     }
   }
 
@@ -72,26 +80,16 @@ export class ModalAddComponent {
 
   resetForm() {
     this.client = {
-      nombres: '',
-      apellidos: '',
-      correo: '',
-      celular: '',
-      fecha_nacimiento: '',
+      nombres: "",
+      apellidos: "",
+      correo: "",
+      celular: "",
+      fecha_nacimiento: "",
       estado_habilitado: false,
     };
     this.clientForm.resetForm();
   }
 
-  handleDateInput(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const [year, month, day] = input.value.split('-');
-    this.client.fecha_nacimiento = `${year}-${month}-${day}`;
-  }
-
-  formatDate(dateString: string): string {
-    const [year, month, day] = dateString.split('-');
-    return `${day}/${month}/${year}`;
-  }
   // Referencias de plantilla para los toasts
   successTpl!: TemplateRef<any>;
   errorTpl!: TemplateRef<any>;
